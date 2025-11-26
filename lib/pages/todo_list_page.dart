@@ -78,6 +78,7 @@ class _TodoListPageState extends State<TodoListPage> {
                           Todo newTodo = Todo(
                             title: text,
                             dateTime: DateTime.now(),
+                            checked: false,
                           );
                           todos.add(newTodo);
                           errorText = null;
@@ -102,7 +103,11 @@ class _TodoListPageState extends State<TodoListPage> {
                     shrinkWrap: true,
                     children: [
                       for (Todo todo in todos)
-                        TodoListItem(todo: todo, onDelete: onDelete),
+                        TodoListItem(
+                          todo: todo,
+                          onDelete: onDelete,
+                          onChanged: onChanged,
+                        ),
                     ],
                   ),
                 ),
@@ -132,6 +137,7 @@ class _TodoListPageState extends State<TodoListPage> {
             ),
           ),
         ),
+        bottomNavigationBar: Text('Desenvolvido por Bruno Oyamada - 2025'),
       ),
     );
   }
@@ -198,6 +204,13 @@ class _TodoListPageState extends State<TodoListPage> {
   void deleteAllTodos() {
     setState(() {
       todos.clear();
+    });
+    todoRepository.saveTodoList(todos);
+  }
+
+  void onChanged(Todo todo) {
+    setState(() {
+      todo.checked = !todo.checked;
     });
     todoRepository.saveTodoList(todos);
   }
